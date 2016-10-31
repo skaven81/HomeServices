@@ -29,7 +29,6 @@ apache:
   - /raid/user:/home:ro
   - /raid/www-logs:/var/log/apache2
   stdin_open: true
-  mem_limit: 536870912
 
 plex:
   ports:
