@@ -50,7 +50,6 @@ plex:
   - /raid/plex:/config
   - /raid/Video:/data:ro
   stdin_open: true
-  net: bridge
 
 crashplan:
   ports:
