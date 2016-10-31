@@ -1,0 +1,75 @@
+subsonic:
+  ports:
+  - 4040:4040/tcp
+  labels:
+    io.rancher.container.pull_image: always
+  tty: true
+  image: skaven/subsonic:latest
+  cpu_shares: 512
+  volumes:
+  - /raid/subsonic/subsonic-data:/subsonic
+  - /raid/MP3s:/music/MP3s:ro
+  - /raid/Alans\ Music:/music/Alan:ro
+  - /raid/user/lori/My\ Documents/My\ Music:/music/lori:ro
+  - /raid/subsonic/playlists:/playlists
+  - /raid/subsonic/video:/video
+  stdin_open: true
+
+apache:
+  ports:
+  - 80:80/tcp
+  - 443:443/tcp
+  labels:
+    io.rancher.container.pull_image: always
+  tty: true
+  image: skaven/apache-php:latest
+  cpu_shares: 256
+  volumes:
+  - /raid/www:/var/www/html:ro
+  - /raid/user:/home:ro
+  - /raid/www-logs:/var/log/apache2
+  stdin_open: true
+  mem_limit: 536870912
+
+plex:
+  ports:
+  - 32400:32400/tcp
+  - 32410:32410/udp
+  - 32412:32412/udp
+  - 32413:32413/udp
+  - 32414:32414/udp
+  - 1900:1900/udp
+  - 32469:32469/tcp
+  - 5353:5353/udp
+  labels:
+    io.rancher.container.pull_image: always
+  tty: true
+  hostname: plex
+  image: skaven/plex:1.1.4.2757
+  cpu_shares: 1024
+  volumes:
+  - /raid/plex:/config
+  - /raid/Video:/data:ro
+  stdin_open: true
+  net: bridge
+
+crashplan:
+  ports:
+  - 4242:4242/tcp
+  - 4343:4343/tcp
+  labels:
+    io.rancher.container.pull_image: always
+  tty: true
+  hostname: docker-crashplan
+  image: skaven/crashplan:4.8
+  cpu_shares: 512
+  volumes:
+  - /raid/crashplan-conf/conf:/opt/crashplan/conf
+  - /raid/crashplan-conf/cache:/opt/crashplan/cache
+  - /raid/crashplan-conf/var:/var/lib/crashplan
+  - /raid/crashplan-store:/crashplan-store
+  - /raid:/raid5:ro
+  - /:/geofront-root:ro
+  stdin_open: true
+  net: host
+
