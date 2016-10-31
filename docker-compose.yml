@@ -72,3 +72,27 @@ crashplan:
   stdin_open: true
   net: host
 
+dnsmasq:
+  ports:
+  - 53:53/tcp
+  - 53:53/udp
+  labels:
+    io.rancher.container.pull_image: always
+  tty: true
+  command:
+  - --log-facility=-
+  - --no-hosts
+  - --addn-hosts=/dnsmasq/hosts
+  - --resolv-file=/dnsmasq/resolv.conf
+  - --dhcp-range=192.168.1.64,192.168.1.127,255.255.255.0
+  - --dhcp-hostsfile=/dnsmasq/dhcphosts
+  - --dhcp-authoritative
+  - --dhcp-leasefile=/dnsmasq/dhcp.leases
+  image: andyshinn/dnsmasq:latest
+  volumes:
+  - /raid/dnsmasq:/dnsmasq
+  stdin_open: true
+  net: host
+  cap_add:
+  - NET_ADMIN
+
