@@ -1,0 +1,9 @@
+subsonic:
+  scale: 1
+apache:
+  scale: 1
+plex:
+  scale: 1
+crashplan:
+  scale: 1
+
