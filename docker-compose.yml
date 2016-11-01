@@ -90,3 +90,23 @@ dnsmasq:
   cap_add:
   - NET_ADMIN
 
+samba:
+  ports:
+  - 139:139
+  - 445:445
+  labels:
+    io.rancher.container.pull_image: always
+  tty: true
+  command:
+  - -n
+  - -u skaven;skaven;1000
+  - -u lori;lori;500
+  - -s raid;/raid6;yes;no;no;all;none
+  - -m
+  image: skaven/samba:latest
+  volumes:
+  - /raid:/raid6
+  - /raid/user:/home
+  stdin_open: true
+  net: host
+
