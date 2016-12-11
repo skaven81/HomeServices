@@ -72,24 +72,6 @@ crashplan:
   stdin_open: true
   net: host
 
-dnsmasq:
-  ports:
-  - 53:53/tcp
-  - 53:53/udp
-  labels:
-    io.rancher.container.pull_image: always
-  tty: true
-  command:
-  - --log-facility=-
-  - --conf-file=/dnsmasq/dnsmasq.conf
-  image: andyshinn/dnsmasq:latest
-  volumes:
-  - /raid/dnsmasq:/dnsmasq
-  stdin_open: true
-  net: host
-  cap_add:
-  - NET_ADMIN
-
 samba:
   ports:
   - 139:139
@@ -99,6 +81,7 @@ samba:
   tty: true
   command:
   - -n
+  - -l
   - -u skaven;skaven;1000
   - -u lori;lori;500
   - -s raid;/raid6;yes;no;no;all;none

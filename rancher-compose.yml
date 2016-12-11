@@ -6,7 +6,5 @@ plex:
   scale: 1
 crashplan:
   scale: 1
-dnsmasq:
-  scale: 1
 samba:
   scale: 1
