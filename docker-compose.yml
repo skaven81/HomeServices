@@ -89,6 +89,7 @@ samba:
   image: skaven/samba:latest
   volumes:
   - /raid:/raid6
+  - /raid:/raid
   - /raid/user:/home
   stdin_open: true
   net: host
