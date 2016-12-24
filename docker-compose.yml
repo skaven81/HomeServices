@@ -27,7 +27,6 @@ apache:
   volumes:
   - /raid/www-logs:/var/log/apache2
   - /raid/www:/var/www/html:ro
-  - /raid/www/photos/cache:/photo_cache
   - /raid/user:/home:ro
   stdin_open: true
 
