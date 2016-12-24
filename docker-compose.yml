@@ -23,11 +23,12 @@ apache:
     io.rancher.container.pull_image: always
   tty: true
   image: skaven/apache-php:latest
-  cpu_shares: 256
+  cpu_shares: 768
   volumes:
-  - /raid/www:/var/www/html:ro
-  - /raid/user:/home:ro
   - /raid/www-logs:/var/log/apache2
+  - /raid/www:/var/www/html:ro
+  - /raid/www/photos/cache:/photo_cache
+  - /raid/user:/home:ro
   stdin_open: true
 
 plex:
