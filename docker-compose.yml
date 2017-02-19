@@ -40,6 +40,7 @@ plex:
   - 1900:1900/udp
   - 32469:32469/tcp
   - 5353:5353/udp
+  network_mode: host
   labels:
     io.rancher.container.pull_image: always
   tty: true
@@ -50,7 +51,6 @@ plex:
   - /raid/plex:/config
   - /raid/Video:/data:ro
   stdin_open: true
-  net: bridge
 
 crashplan:
   ports:
