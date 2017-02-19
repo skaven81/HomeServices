@@ -40,12 +40,13 @@ plex:
   - 1900:1900/udp
   - 32469:32469/tcp
   - 5353:5353/udp
-  network_mode: host
+  net: host
+  hostname: plex
   labels:
     io.rancher.container.pull_image: always
   tty: true
   hostname: plex
-  image: skaven/plex:1.1.4.2757
+  image: skaven/plex:1.3.4.3285
   cpu_shares: 1024
   volumes:
   - /raid/plex:/config
