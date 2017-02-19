@@ -5,7 +5,6 @@ subsonic:
     io.rancher.container.pull_image: always
   tty: true
   image: skaven/subsonic:latest
-  cpu_shares: 512
   volumes:
   - /raid/subsonic/subsonic-data:/subsonic
   - /raid/MP3s:/music/MP3s:ro
@@ -23,7 +22,6 @@ apache:
     io.rancher.container.pull_image: always
   tty: true
   image: skaven/apache-php:latest
-  cpu_shares: 768
   volumes:
   - /raid/www-logs:/var/log/apache2
   - /raid/www:/var/www/html:ro
@@ -47,10 +45,11 @@ plex:
   tty: true
   hostname: plex
   image: skaven/plex:1.3.4.3285
-  cpu_shares: 1024
   volumes:
   - /raid/plex:/config
   - /raid/Video:/data:ro
+  - /raid/user/lori/My Documents/My Pictures:/photos:ro
+  - /raid/MP3s:/music:ro
   stdin_open: true
 
 crashplan:
@@ -62,7 +61,6 @@ crashplan:
   tty: true
   hostname: docker-crashplan
   image: skaven/crashplan:4.8
-  cpu_shares: 512
   volumes:
   - /raid/crashplan-conf/conf:/opt/crashplan/conf
   - /raid/crashplan-conf/cache:/opt/crashplan/cache
