@@ -13,6 +13,7 @@ subsonic:
   - /raid/subsonic/playlists:/playlists
   - /raid/subsonic/video:/video
   stdin_open: true
+  net: host
 
 apache:
   ports:
@@ -27,6 +28,7 @@ apache:
   - /raid/www:/var/www/html:ro
   - /raid/user:/home:ro
   stdin_open: true
+  net: host
 
 plex:
   ports:
