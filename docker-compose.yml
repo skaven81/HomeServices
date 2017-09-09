@@ -14,6 +14,7 @@ subsonic:
   - /raid/subsonic/video:/video
   stdin_open: true
   net: host
+  restart: unless-stopped
 
 apache:
   ports:
@@ -29,6 +30,7 @@ apache:
   - /raid/user:/home:ro
   stdin_open: true
   net: host
+  restart: unless-stopped
 
 plex:
   ports:
@@ -53,6 +55,7 @@ plex:
   - /raid/user/lori/My Documents/My Pictures:/photos:ro
   - /raid/MP3s:/music:ro
   stdin_open: true
+  restart: unless-stopped
 
 crashplan:
   ports:
@@ -62,7 +65,7 @@ crashplan:
     io.rancher.container.pull_image: always
   tty: true
   hostname: docker-crashplan
-  image: skaven/crashplan:4.8.3
+  image: skaven/crashplan:pro4.9.0
   volumes:
   - /raid/crashplan-conf/conf:/opt/crashplan/conf
   - /raid/crashplan-conf/cache:/opt/crashplan/cache
@@ -72,6 +75,7 @@ crashplan:
   - /:/geofront-root:ro
   stdin_open: true
   net: host
+  restart: unless-stopped
 
 samba:
   ports:
@@ -94,4 +98,5 @@ samba:
   - /raid/user:/home
   stdin_open: true
   net: host
+  restart: unless-stopped
 
