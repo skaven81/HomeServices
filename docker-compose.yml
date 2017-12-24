@@ -13,7 +13,6 @@ subsonic:
   - /raid/subsonic/playlists:/playlists
   - /raid/subsonic/video:/video
   stdin_open: true
-  net: host
   restart: unless-stopped
 
 apache:
