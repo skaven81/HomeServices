@@ -59,13 +59,12 @@ plex:
 
 crashplan:
   ports:
-  - 4242:4242/tcp
-  - 4343:4343/tcp
+  - 4245:4245
   labels:
     io.rancher.container.pull_image: always
   tty: true
   hostname: docker-crashplan
-  image: skaven/crashplan:pro6.6.0
+  image: skaven/crashplan:pro4.9.0-1
   volumes:
   - /raid/crashplan-conf/conf:/opt/crashplan/conf
   - /raid/crashplan-conf/cache:/opt/crashplan/cache
@@ -74,7 +73,6 @@ crashplan:
   - /raid:/raid5:ro
   - /:/geofront-root:ro
   stdin_open: true
-  net: host
   restart: unless-stopped
 
 samba:
