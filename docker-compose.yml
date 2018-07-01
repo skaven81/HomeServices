@@ -69,6 +69,8 @@ crashplan:
   - /raid/crashplan-store:/crashplan-store
   - /raid:/raid5:ro
   - /:/geofront-root:ro
+  ports:
+  - 5900:5900
   stdin_open: true
   restart: unless-stopped
 
