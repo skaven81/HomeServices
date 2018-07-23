@@ -47,7 +47,7 @@ plex:
     io.rancher.container.pull_image: always
   tty: true
   hostname: plex
-  image: skaven/plex:1.9.3.4290
+  image: skaven/plex:1.13.4.5271
   volumes:
   - /raid/plex:/config
   - /raid/Video:/data:ro
