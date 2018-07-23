@@ -65,6 +65,8 @@ crashplan:
   volumes:
   - /raid/crashplan-conf/conf:/opt/crashplan/conf
   - /raid/crashplan-conf/cache:/opt/crashplan/cache
+  - /raid/crashplan-conf/metadata:/opt/crashplan/metadata
+  - /raid/crashplan-conf/logs:/opt/crashplan/log
   - /raid/crashplan-conf/var:/var/lib/crashplan
   - /raid/crashplan-store:/crashplan-store
   - /raid:/raid5:ro
