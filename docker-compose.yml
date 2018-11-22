@@ -90,7 +90,7 @@ samba:
   - -u lori;lori;500
   - -s raid;/raid6;yes;no;no;all;none
   - -m
-  image: skaven/samba:latest
+  image: skaven/samba:2018.11
   volumes:
   - /raid:/raid6
   - /raid:/raid
