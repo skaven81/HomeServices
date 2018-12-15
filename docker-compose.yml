@@ -15,21 +15,18 @@ subsonic:
   stdin_open: true
   restart: unless-stopped
 
-apache:
+nginx:
   ports:
   - 80:80/tcp
   - 443:443/tcp
-  labels:
-    io.rancher.container.pull_image: always
   tty: true
-  image: skaven/apache-php:latest
+  image: skaven/nginx:20181215
   volumes:
-  - /raid/www-logs:/var/log/apache2
-  - /raid/www:/var/www/html:ro
-  - /raid/user:/home:ro
-  stdin_open: true
-  net: host
+  - /raid/letsencrypt:/etc/letsencrypt
+  - /raid/www:/usr/share/nginx/html:ro
   restart: unless-stopped
+  links:
+  - subsonic
 
 plex:
   ports:
