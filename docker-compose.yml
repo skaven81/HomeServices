@@ -20,13 +20,24 @@ nginx:
   - 80:80/tcp
   - 443:443/tcp
   tty: true
-  image: skaven/nginx:20181215
+  image: skaven/nginx:20181230
   volumes:
   - /raid/letsencrypt:/etc/letsencrypt
   - /raid/www:/usr/share/nginx/html:ro
   restart: unless-stopped
   links:
   - subsonic
+  - php
+
+php:
+  image: skaven/php:20181230
+  volumes:
+  - /raid/www:/usr/share/nginx/html:ro
+  - /raid/www/photos:/usr/share/nginx/html/photos
+  - /raid/photo_gallery_cache:/_sfpg_data
+  - /raid/user/lori/My Documents/My Pictures:/photo_root/lori:ro
+  - /raid/user/skaven/Photos:/photo_root/paul:ro
+  restart: unless-stopped
 
 plex:
   ports:
