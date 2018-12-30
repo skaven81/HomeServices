@@ -1,10 +1,8 @@
 subsonic:
-  ports:
-  - 4040:4040/tcp
   labels:
     io.rancher.container.pull_image: always
   tty: true
-  image: skaven/subsonic:6.1.4
+  image: skaven/subsonic:6.1.5
   volumes:
   - /raid/subsonic/subsonic-data:/subsonic
   - /raid/MP3s:/music/MP3s:ro
