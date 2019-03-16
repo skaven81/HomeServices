@@ -18,7 +18,7 @@ nginx:
   - 80:80/tcp
   - 443:443/tcp
   tty: true
-  image: skaven/nginx:20190228
+  image: skaven/nginx:20190316
   volumes:
   - /raid/letsencrypt:/etc/letsencrypt
   - /raid/www:/usr/share/nginx/html:ro
