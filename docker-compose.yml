@@ -18,7 +18,7 @@ nginx:
   - 80:80/tcp
   - 443:443/tcp
   tty: true
-  image: skaven/nginx:20190705
+  image: skaven/nginx:20191102
   volumes:
   - /raid/letsencrypt:/etc/letsencrypt
   - /raid/www:/usr/share/nginx/html:ro
@@ -31,7 +31,7 @@ nginx:
   - web-garage
 
 php:
-  image: skaven/php:20181230
+  image: skaven/php:20191102
   volumes:
   - /raid/www:/usr/share/nginx/html:ro
   - /raid/www/photos:/usr/share/nginx/html/photos
@@ -56,7 +56,7 @@ plex:
     io.rancher.container.pull_image: always
   tty: true
   hostname: plex
-  image: skaven/plex:1.14.1.5488
+  image: skaven/plex:1.18.1.1973
   volumes:
   - /raid/plex:/config
   - /raid/Video:/data:ro
@@ -79,7 +79,7 @@ samba:
   - -u lori;lori;500
   - -s raid;/raid6;yes;no;no;all;none
   - -m
-  image: skaven/samba:2018.11
+  image: skaven/samba:2019.11
   volumes:
   - /raid:/raid6
   - /raid:/raid
