@@ -18,7 +18,7 @@ nginx:
   - 80:80/tcp
   - 443:443/tcp
   tty: true
-  image: skaven/nginx:20191109
+  image: skaven/nginx:20191130
   volumes:
   - /raid/letsencrypt:/etc/letsencrypt
   - /raid/www:/usr/share/nginx/html:ro
@@ -26,9 +26,8 @@ nginx:
   links:
   - subsonic
   - php
-#  - web-frontdoor
-#  - web-backyard
-#  - web-garage
+  - web-backyard
+  - web-frontdoor
 
 php:
   image: skaven/php:20191102
@@ -88,65 +87,44 @@ samba:
   net: host
   restart: unless-stopped
 
-#machinery-frontdoor:
-#  image: kerberos/machinery:v2.5.1
-#  expose:
-#  - 8889
-#  volumes:
-#  - /raid/kerberos/40-frontdoor/capture:/etc/opt/kerberosio/capture
-#  - /raid/kerberos/40-frontdoor/config:/etc/opt/kerberosio/config
-#  - /raid/kerberos/40-frontdoor/logs:/etc/opt/kerberosio/logs
-#  restart: unless-stopped
-#web-frontdoor:
-#  image: kerberos/web:v2.5.1
-#  environment:
-#  - KERBEROSIO_SECURE_SSL=true
-#  volumes_from:
-#  - machinery-frontdoor
-#  volumes:
-#  - /raid/kerberos/webconfig:/var/www/web/config
-#  links:
-#  - machinery-frontdoor:machinery
-#  restart: unless-stopped
-#
-#machinery-backyard:
-#  image: kerberos/machinery:v2.5.1
-#  expose:
-#  - 8889
-#  volumes:
-#  - /raid/kerberos/41-backyard/capture:/etc/opt/kerberosio/capture
-#  - /raid/kerberos/41-backyard/config:/etc/opt/kerberosio/config
-#  - /raid/kerberos/41-backyard/logs:/etc/opt/kerberosio/logs
-#  restart: unless-stopped
-#web-backyard:
-#  image: kerberos/web:v2.5.1
-#  environment:
-#  - KERBEROSIO_SECURE_SSL=true
-#  volumes_from:
-#  - machinery-backyard
-#  volumes:
-#  - /raid/kerberos/webconfig:/var/www/web/config
-#  links:
-#  - machinery-backyard:machinery
-#  restart: unless-stopped
-#
-#machinery-garage:
-#  image: kerberos/machinery:v2.5.1
-#  expose:
-#  - 8889
-#  volumes:
-#  - /raid/kerberos/42-garage/capture:/etc/opt/kerberosio/capture
-#  - /raid/kerberos/42-garage/config:/etc/opt/kerberosio/config
-#  - /raid/kerberos/42-garage/logs:/etc/opt/kerberosio/logs
-#  restart: unless-stopped
-#web-garage:
-#  image: kerberos/web:v2.5.1
-#  environment:
-#  - KERBEROSIO_SECURE_SSL=true
-#  volumes_from:
-#  - machinery-garage
-#  volumes:
-#  - /raid/kerberos/webconfig:/var/www/web/config
-#  links:
-#  - machinery-garage:machinery
-#  restart: unless-stopped
+machinery-frontdoor:
+  image: kerberos/machinery:v2.5.1
+  expose:
+  - 8889
+  volumes:
+  - /raid/kerberos/40-frontdoor/capture:/etc/opt/kerberosio/capture
+  - /raid/kerberos/40-frontdoor/config:/etc/opt/kerberosio/config
+  - /raid/kerberos/40-frontdoor/logs:/etc/opt/kerberosio/logs
+  restart: unless-stopped
+web-frontdoor:
+  image: kerberos/web:v2.5.1
+  environment:
+  - KERBEROSIO_SECURE_SSL=true
+  volumes_from:
+  - machinery-frontdoor
+  volumes:
+  - /raid/kerberos/webconfig:/var/www/web/config
+  links:
+  - machinery-frontdoor:machinery
+  restart: unless-stopped
+
+machinery-backyard:
+  image: kerberos/machinery:v2.5.1
+  expose:
+  - 8889
+  volumes:
+  - /raid/kerberos/41-backyard/capture:/etc/opt/kerberosio/capture
+  - /raid/kerberos/41-backyard/config:/etc/opt/kerberosio/config
+  - /raid/kerberos/41-backyard/logs:/etc/opt/kerberosio/logs
+  restart: unless-stopped
+web-backyard:
+  image: kerberos/web:v2.5.1
+  environment:
+  - KERBEROSIO_SECURE_SSL=true
+  volumes_from:
+  - machinery-backyard
+  volumes:
+  - /raid/kerberos/webconfig:/var/www/web/config
+  links:
+  - machinery-backyard:machinery
+  restart: unless-stopped
