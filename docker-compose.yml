@@ -18,7 +18,7 @@ nginx:
   - 80:80/tcp
   - 443:443/tcp
   tty: true
-  image: skaven/nginx:20191130
+  image: skaven/nginx:20191201
   volumes:
   - /raid/letsencrypt:/etc/letsencrypt
   - /raid/www:/usr/share/nginx/html:ro
@@ -92,9 +92,9 @@ machinery-frontdoor:
   expose:
   - 8889
   volumes:
-  - /raid/kerberos/40-frontdoor/capture:/etc/opt/kerberosio/capture
-  - /raid/kerberos/40-frontdoor/config:/etc/opt/kerberosio/config
-  - /raid/kerberos/40-frontdoor/logs:/etc/opt/kerberosio/logs
+  - /raid/kerberos/42-frontdoor/capture:/etc/opt/kerberosio/capture
+  - /raid/kerberos/42-frontdoor/config:/etc/opt/kerberosio/config
+  - /raid/kerberos/42-frontdoor/logs:/etc/opt/kerberosio/logs
   restart: unless-stopped
 web-frontdoor:
   image: kerberos/web:v2.5.1
