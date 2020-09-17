@@ -2,7 +2,7 @@ subsonic:
   labels:
     io.rancher.container.pull_image: always
   tty: true
-  image: skaven/subsonic:6.1.5
+  image: skaven/subsonic:6.1.6
   volumes:
   - /raid/subsonic/subsonic-data:/subsonic
   - /raid/MP3s:/music/MP3s:ro
