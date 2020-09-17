@@ -18,7 +18,7 @@ nginx:
   - 80:80/tcp
   - 443:443/tcp
   tty: true
-  image: skaven/nginx:20191201
+  image: skaven/nginx:20200916
   volumes:
   - /raid/letsencrypt:/etc/letsencrypt
   - /raid/www:/usr/share/nginx/html:ro
@@ -30,7 +30,7 @@ nginx:
   - web-frontdoor
 
 php:
-  image: skaven/php:20191102
+  image: skaven/php:20200916
   volumes:
   - /raid/www:/usr/share/nginx/html:ro
   - /raid/www/photos:/usr/share/nginx/html/photos
@@ -78,7 +78,7 @@ samba:
   - -u lori;lori;500
   - -s raid;/raid6;yes;no;no;all;none
   - -m
-  image: skaven/samba:2019.11
+  image: skaven/samba:2020.09
   volumes:
   - /raid:/raid6
   - /raid:/raid
