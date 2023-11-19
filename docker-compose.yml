@@ -2,11 +2,12 @@ subsonic:
   labels:
     io.rancher.container.pull_image: always
   tty: true
-  image: skaven/subsonic:6.1.6
+  image: skaven/subsonic:6.1.6-2
   volumes:
   - /raid/subsonic/subsonic-data:/subsonic
   - /raid/MP3s:/music/MP3s:ro
   - /raid/Alans Music:/music/Alan:ro
+  - /raid/Magers Music:/music/Magers:ro
   - /raid/user/lori/My Documents/My Music:/music/Lori:ro
   - /raid/subsonic/playlists:/playlists
   - /raid/subsonic/video:/video
@@ -18,7 +19,7 @@ nginx:
   - 80:80/tcp
   - 443:443/tcp
   tty: true
-  image: skaven/nginx:20200916
+  image: skaven/nginx:20231119
   volumes:
   - /raid/letsencrypt:/etc/letsencrypt
   - /raid/www:/usr/share/nginx/html:ro
@@ -30,7 +31,7 @@ nginx:
   - web-frontdoor
 
 php:
-  image: skaven/php:20200916
+  image: skaven/php:20231119
   volumes:
   - /raid/www:/usr/share/nginx/html:ro
   - /raid/www/photos:/usr/share/nginx/html/photos
