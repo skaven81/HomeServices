@@ -19,7 +19,7 @@ nginx:
   - 80:80/tcp
   - 443:443/tcp
   tty: true
-  image: skaven/nginx:20240128
+  image: skaven/nginx:20241227
   volumes:
   - /raid/letsencrypt:/etc/letsencrypt
   - /raid/www:/usr/share/nginx/html:ro
@@ -29,6 +29,7 @@ nginx:
   - php
   - web-backyard
   - web-frontdoor
+  - web-patio
 
 php:
   image: skaven/php:20231119
@@ -129,3 +130,26 @@ web-backyard:
   links:
   - machinery-backyard:machinery
   restart: unless-stopped
+
+machinery-patio:
+  image: kerberos/machinery:v2.5.1
+  expose:
+  - 8889
+  volumes:
+  - /raid/kerberos/250-patio/capture:/etc/opt/kerberosio/capture
+  - /raid/kerberos/250-patio/config:/etc/opt/kerberosio/config
+  - /raid/kerberos/250-patio/logs:/etc/opt/kerberosio/logs
+  restart: unless-stopped
+web-patio:
+  image: kerberos/web:v2.5.1
+  environment:
+  - KERBEROSIO_SECURE_SSL=true
+  volumes_from:
+  - machinery-patio
+  volumes:
+  - /raid/kerberos/webconfig:/var/www/web/config
+  links:
+  - machinery-patio:machinery
+  restart: unless-stopped
+
+
