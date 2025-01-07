@@ -1,155 +1,143 @@
-subsonic:
-  labels:
-    io.rancher.container.pull_image: always
-  tty: true
-  image: skaven/subsonic:6.1.6-2
-  volumes:
-  - /raid/subsonic/subsonic-data:/subsonic
-  - /raid/MP3s:/music/MP3s:ro
-  - /raid/Alans Music:/music/Alan:ro
-  - /raid/Magers Music:/music/Magers:ro
-  - /raid/user/lori/My Documents/My Music:/music/Lori:ro
-  - /raid/subsonic/playlists:/playlists
-  - /raid/subsonic/video:/video
-  stdin_open: true
-  restart: unless-stopped
+# vim: syntax=yaml ts=2 sts=2 sw=2 expandtab
+name: geofront
+services:
+  subsonic:
+    labels:
+      io.rancher.container.pull_image: always
+    tty: true
+    image: skaven/subsonic:6.1.6-2
+    volumes:
+    - /raid/subsonic/subsonic-data:/subsonic
+    - /raid/MP3s:/music/MP3s:ro
+    - /raid/Alans Music:/music/Alan:ro
+    - /raid/Magers Music:/music/Magers:ro
+    - /raid/user/lori/My Documents/My Music:/music/Lori:ro
+    - /raid/subsonic/playlists:/playlists
+    - /raid/subsonic/video:/video
+    stdin_open: true
+    restart: unless-stopped
 
-nginx:
-  ports:
-  - 80:80/tcp
-  - 443:443/tcp
-  tty: true
-  image: skaven/nginx:20241227
-  volumes:
-  - /raid/letsencrypt:/etc/letsencrypt
-  - /raid/www:/usr/share/nginx/html:ro
-  restart: unless-stopped
-  links:
-  - subsonic
-  - php
-  - web-backyard
-  - web-frontdoor
-  - web-patio
+  nginx:
+    ports:
+    - 80:80/tcp
+    - 443:443/tcp
+    tty: true
+    image: skaven/nginx:20250106
+    labels:
+      io.rancher.container.pull_image: always
+    volumes:
+    - /raid/letsencrypt:/etc/letsencrypt
+    - /raid/www:/usr/share/nginx/html:ro
+    restart: unless-stopped
+    links:
+    - subsonic
+    - php
+#    - web-backyard
+#    - web-frontdoor
+#    - web-patio
 
-php:
-  image: skaven/php:20231119
-  volumes:
-  - /raid/www:/usr/share/nginx/html:ro
-  - /raid/www/photos:/usr/share/nginx/html/photos
-  - /raid/photo_gallery_cache:/_sfpg_data
-  - /raid/user/lori/My Documents/My Pictures:/photo_root/lori:ro
-  - /raid/user/skaven/Photos:/photo_root/paul:ro
-  restart: unless-stopped
+  php:
+    image: skaven/php:20231119
+    labels:
+      io.rancher.container.pull_image: always
+    volumes:
+    - /raid/www:/usr/share/nginx/html:ro
+    - /raid/www/photos:/usr/share/nginx/html/photos
+    - /raid/photo_gallery_cache:/_sfpg_data
+    - /raid/user/lori/My Documents/My Pictures:/photo_root/lori:ro
+    - /raid/user/skaven/Photos:/photo_root/paul:ro
+    restart: unless-stopped
 
-plex:
-  ports:
-  - 32400:32400/tcp
-  - 32410:32410/udp
-  - 32412:32412/udp
-  - 32413:32413/udp
-  - 32414:32414/udp
-  - 1900:1900/udp
-  - 32469:32469/tcp
-  - 5353:5353/udp
-  net: host
-  hostname: plex
-  labels:
-    io.rancher.container.pull_image: always
-  tty: true
-  hostname: plex
-  image: skaven/plex:1.18.1.1973
-  volumes:
-  - /raid/plex:/config
-  - /raid/Video:/data:ro
-  - /raid/user/lori/My Documents/My Pictures:/photos:ro
-  - /raid/MP3s:/music:ro
-  stdin_open: true
-  restart: unless-stopped
+  plex:
+    network_mode: host
+    hostname: plex
+    labels:
+      io.rancher.container.pull_image: always
+    tty: true
+    image: skaven/plex:1.18.1.1973
+    volumes:
+    - /raid/plex:/config
+    - /raid/Video:/data:ro
+    - /raid/user/lori/My Documents/My Pictures:/photos:ro
+    - /raid/MP3s:/music:ro
+    stdin_open: true
+    restart: unless-stopped
 
-samba:
-  ports:
-  - 139:139
-  - 445:445
-  labels:
-    io.rancher.container.pull_image: always
-  tty: true
-  command:
-  - -n
-  - -l
-  - -u skaven;skaven;1000
-  - -u lori;lori;500
-  - -s raid;/raid6;yes;no;no;all;none
-  - -m
-  image: skaven/samba:2020.09
-  volumes:
-  - /raid:/raid6
-  - /raid:/raid
-  - /raid/user:/home
-  stdin_open: true
-  net: host
-  restart: unless-stopped
+  samba:
+    labels:
+      io.rancher.container.pull_image: always
+    tty: true
+    command:
+    - -n
+    - -l
+    - -u skaven;skaven;1000
+    - -u lori;lori;500
+    - -s raid;/raid6;yes;no;no;all;none
+    - -m
+    image: skaven/samba:2020.09
+    volumes:
+    - /raid:/raid6
+    - /raid:/raid
+    - /raid/user:/home
+    stdin_open: true
+    network_mode: host
+    restart: unless-stopped
 
-machinery-frontdoor:
-  image: kerberos/machinery:v2.5.1
-  expose:
-  - 8889
-  volumes:
-  - /raid/kerberos/42-frontdoor/capture:/etc/opt/kerberosio/capture
-  - /raid/kerberos/42-frontdoor/config:/etc/opt/kerberosio/config
-  - /raid/kerberos/42-frontdoor/logs:/etc/opt/kerberosio/logs
-  restart: unless-stopped
-web-frontdoor:
-  image: kerberos/web:v2.5.1
-  environment:
-  - KERBEROSIO_SECURE_SSL=true
-  volumes_from:
-  - machinery-frontdoor
-  volumes:
-  - /raid/kerberos/webconfig:/var/www/web/config
-  links:
-  - machinery-frontdoor:machinery
-  restart: unless-stopped
-
-machinery-backyard:
-  image: kerberos/machinery:v2.5.1
-  expose:
-  - 8889
-  volumes:
-  - /raid/kerberos/41-backyard/capture:/etc/opt/kerberosio/capture
-  - /raid/kerberos/41-backyard/config:/etc/opt/kerberosio/config
-  - /raid/kerberos/41-backyard/logs:/etc/opt/kerberosio/logs
-  restart: unless-stopped
-web-backyard:
-  image: kerberos/web:v2.5.1
-  environment:
-  - KERBEROSIO_SECURE_SSL=true
-  volumes_from:
-  - machinery-backyard
-  volumes:
-  - /raid/kerberos/webconfig:/var/www/web/config
-  links:
-  - machinery-backyard:machinery
-  restart: unless-stopped
-
-machinery-patio:
-  image: kerberos/machinery:v2.5.1
-  expose:
-  - 8889
-  volumes:
-  - /raid/kerberos/250-patio/capture:/etc/opt/kerberosio/capture
-  - /raid/kerberos/250-patio/config:/etc/opt/kerberosio/config
-  - /raid/kerberos/250-patio/logs:/etc/opt/kerberosio/logs
-  restart: unless-stopped
-web-patio:
-  image: kerberos/web:v2.5.1
-  environment:
-  - KERBEROSIO_SECURE_SSL=true
-  volumes_from:
-  - machinery-patio
-  volumes:
-  - /raid/kerberos/webconfig:/var/www/web/config
-  links:
-  - machinery-patio:machinery
-  restart: unless-stopped
-
-
+#  machinery-frontdoor:
+#    image: kerberos/machinery:v2.5.1
+#    expose:
+#    - 8889
+#    volumes:
+#    - /raid/kerberos/42-frontdoor/capture:/etc/opt/kerberosio/capture
+#    - /raid/kerberos/42-frontdoor/config:/etc/opt/kerberosio/config
+#    - /raid/kerberos/42-frontdoor/logs:/etc/opt/kerberosio/logs
+#    restart: unless-stopped
+#  web-frontdoor:
+#    image: kerberos/web:v2.5.1
+#    environment:
+#    - KERBEROSIO_SECURE_SSL=true
+#    volumes_from:
+#    - machinery-frontdoor
+#    volumes:
+#    - /raid/kerberos/webconfig:/var/www/web/config
+#    links:
+#    - machinery-frontdoor:machinery
+#    restart: unless-stopped
+#
+#  web-backyard:
+#    image: kerberos/agent:v3.2.9
+#    expose:
+#    - 80
+#    #environment:
+#    #- KERBEROSIO_SECURE_SSL=true
+#    #volumes_from:
+#    #- machinery-backyard
+#    volumes:
+#    - /raid/kerberos/webconfig:/var/www/web/config
+#    - /raid/kerberos/41-backyard/capture:/etc/opt/kerberosio/capture
+#    - /raid/kerberos/41-backyard/config:/etc/opt/kerberosio/config
+#    - /raid/kerberos/41-backyard/logs:/etc/opt/kerberosio/logs
+#    restart: unless-stopped
+#
+#  machinery-patio:
+#    image: kerberos/machinery:v2.5.1
+#    expose:
+#    - 8889
+#    volumes:
+#    - /raid/kerberos/250-patio/capture:/etc/opt/kerberosio/capture
+#    - /raid/kerberos/250-patio/config:/etc/opt/kerberosio/config
+#    - /raid/kerberos/250-patio/logs:/etc/opt/kerberosio/logs
+#    restart: unless-stopped
+#  web-patio:
+#    image: kerberos/web:v2.5.1
+#    environment:
+#    - KERBEROSIO_SECURE_SSL=true
+#    volumes_from:
+#    - machinery-patio
+#    volumes:
+#    - /raid/kerberos/webconfig:/var/www/web/config
+#    links:
+#    - machinery-patio:machinery
+#    restart: unless-stopped
+#
+#
