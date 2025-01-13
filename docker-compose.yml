@@ -82,7 +82,7 @@ services:
     volumes:
     - /raid/zoneminder/mariadb:/var/lib/mysql:Z
   zoneminder:
-    image: skaven/zoneminder:1.36.35-2
+    image: skaven/zoneminder:1.36.35-4
     pull_policy: missing
     links:
     - zm-mariadb:mariadb
