@@ -2,8 +2,6 @@
 name: geofront
 services:
   subsonic:
-    labels:
-      io.rancher.container.pull_image: always
     tty: true
     image: skaven/subsonic:6.1.6-2
     volumes:
@@ -22,9 +20,7 @@ services:
     - 80:80/tcp
     - 443:443/tcp
     tty: true
-    image: skaven/nginx:20250106
-    labels:
-      io.rancher.container.pull_image: always
+    image: skaven/nginx:20250113
     volumes:
     - /raid/letsencrypt:/etc/letsencrypt
     - /raid/www:/usr/share/nginx/html:ro
@@ -32,14 +28,10 @@ services:
     links:
     - subsonic
     - php
-#    - web-backyard
-#    - web-frontdoor
-#    - web-patio
+    - zoneminder
 
   php:
     image: skaven/php:20231119
-    labels:
-      io.rancher.container.pull_image: always
     volumes:
     - /raid/www:/usr/share/nginx/html:ro
     - /raid/www/photos:/usr/share/nginx/html/photos
@@ -51,8 +43,6 @@ services:
   plex:
     network_mode: host
     hostname: plex
-    labels:
-      io.rancher.container.pull_image: always
     tty: true
     image: skaven/plex:1.18.1.1973
     volumes:
@@ -64,8 +54,6 @@ services:
     restart: unless-stopped
 
   samba:
-    labels:
-      io.rancher.container.pull_image: always
     tty: true
     command:
     - -n
@@ -75,6 +63,7 @@ services:
     - -s raid;/raid6;yes;no;no;all;none
     - -m
     image: skaven/samba:2020.09
+    pull_policy: missing
     volumes:
     - /raid:/raid6
     - /raid:/raid
@@ -83,61 +72,23 @@ services:
     network_mode: host
     restart: unless-stopped
 
-#  machinery-frontdoor:
-#    image: kerberos/machinery:v2.5.1
-#    expose:
-#    - 8889
-#    volumes:
-#    - /raid/kerberos/42-frontdoor/capture:/etc/opt/kerberosio/capture
-#    - /raid/kerberos/42-frontdoor/config:/etc/opt/kerberosio/config
-#    - /raid/kerberos/42-frontdoor/logs:/etc/opt/kerberosio/logs
-#    restart: unless-stopped
-#  web-frontdoor:
-#    image: kerberos/web:v2.5.1
-#    environment:
-#    - KERBEROSIO_SECURE_SSL=true
-#    volumes_from:
-#    - machinery-frontdoor
-#    volumes:
-#    - /raid/kerberos/webconfig:/var/www/web/config
-#    links:
-#    - machinery-frontdoor:machinery
-#    restart: unless-stopped
-#
-#  web-backyard:
-#    image: kerberos/agent:v3.2.9
-#    expose:
-#    - 80
-#    #environment:
-#    #- KERBEROSIO_SECURE_SSL=true
-#    #volumes_from:
-#    #- machinery-backyard
-#    volumes:
-#    - /raid/kerberos/webconfig:/var/www/web/config
-#    - /raid/kerberos/41-backyard/capture:/etc/opt/kerberosio/capture
-#    - /raid/kerberos/41-backyard/config:/etc/opt/kerberosio/config
-#    - /raid/kerberos/41-backyard/logs:/etc/opt/kerberosio/logs
-#    restart: unless-stopped
-#
-#  machinery-patio:
-#    image: kerberos/machinery:v2.5.1
-#    expose:
-#    - 8889
-#    volumes:
-#    - /raid/kerberos/250-patio/capture:/etc/opt/kerberosio/capture
-#    - /raid/kerberos/250-patio/config:/etc/opt/kerberosio/config
-#    - /raid/kerberos/250-patio/logs:/etc/opt/kerberosio/logs
-#    restart: unless-stopped
-#  web-patio:
-#    image: kerberos/web:v2.5.1
-#    environment:
-#    - KERBEROSIO_SECURE_SSL=true
-#    volumes_from:
-#    - machinery-patio
-#    volumes:
-#    - /raid/kerberos/webconfig:/var/www/web/config
-#    links:
-#    - machinery-patio:machinery
-#    restart: unless-stopped
-#
-#
+  zm-mariadb:
+    image: mariadb:11.6
+    pull_policy: missing
+    environment:
+      MARIADB_ROOT_PASSWORD: flargle
+    expose:
+    - "3306"
+    volumes:
+    - /raid/zoneminder/mariadb:/var/lib/mysql:Z
+  zoneminder:
+    image: skaven/zoneminder:1.36.35-2
+    pull_policy: missing
+    links:
+    - zm-mariadb:mariadb
+    volumes:
+    - /raid/zoneminder/events:/var/cache/zoneminder/events
+    - /raid/zoneminder/images:/var/cache/zoneminder/images
+    - /raid/zoneminder/temp:/var/cache/zoneminder/temp
+    - /raid/zoneminder/logs/zoneminder:/var/log/zoneminder
+    - /raid/zoneminder/logs/apache2:/var/log/apache2
