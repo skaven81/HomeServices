@@ -84,6 +84,7 @@ services:
   zoneminder:
     image: skaven/zoneminder:1.36.35-4
     pull_policy: missing
+    shm_size: '1gb'
     links:
     - zm-mariadb:mariadb
     volumes:
