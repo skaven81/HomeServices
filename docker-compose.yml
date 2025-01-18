@@ -74,6 +74,7 @@ services:
   zm-mariadb:
     image: mariadb:11.6
     pull_policy: if_not_present
+    restart: unless-stopped
     environment:
       MARIADB_ROOT_PASSWORD: flargle
       TZ: America/Los_Angeles
@@ -83,6 +84,7 @@ services:
     - /raid/zoneminder/mariadb:/var/lib/mysql:Z
   zoneminder:
     image: skaven/zoneminder:1.36.35-4
+    restart: unless-stopped
     environment:
       TZ: America/Los_Angeles
     pull_policy: if_not_present
