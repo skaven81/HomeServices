@@ -30,7 +30,7 @@ services:
     - zoneminder
 
   php:
-    image: skaven/php:20231119
+    image: skaven/php:20250118-1
     volumes:
     - /raid/www:/usr/share/nginx/html:ro
     - /raid/www/photos:/usr/share/nginx/html/photos
