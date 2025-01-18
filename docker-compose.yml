@@ -1,5 +1,4 @@
 # vim: syntax=yaml ts=2 sts=2 sw=2 expandtab
-name: geofront
 services:
   subsonic:
     tty: true
@@ -63,7 +62,7 @@ services:
     - -s raid;/raid6;yes;no;no;all;none
     - -m
     image: skaven/samba:2020.09
-    pull_policy: missing
+    pull_policy: if_not_present
     volumes:
     - /raid:/raid6
     - /raid:/raid
@@ -74,16 +73,19 @@ services:
 
   zm-mariadb:
     image: mariadb:11.6
-    pull_policy: missing
+    pull_policy: if_not_present
     environment:
       MARIADB_ROOT_PASSWORD: flargle
+      TZ: America/Los_Angeles
     expose:
     - "3306"
     volumes:
     - /raid/zoneminder/mariadb:/var/lib/mysql:Z
   zoneminder:
     image: skaven/zoneminder:1.36.35-4
-    pull_policy: missing
+    environment:
+      TZ: America/Los_Angeles
+    pull_policy: if_not_present
     shm_size: '1gb'
     links:
     - zm-mariadb:mariadb
