@@ -61,7 +61,7 @@ services:
     - -u lori;lori;500
     - -s raid;/raid6;yes;no;no;all;none
     - -m
-    image: skaven/samba:2025.01
+    image: skaven/samba:2025.05
     pull_policy: if_not_present
     volumes:
     - /raid:/raid6
