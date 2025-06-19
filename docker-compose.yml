@@ -59,12 +59,11 @@ services:
     - -l
     - -u skaven;skaven;1000
     - -u lori;lori;500
-    - -s raid;/raid6;yes;no;no;all;none
+    - -s raid;/raid;yes;no;no;all;none
     - -m
-    image: skaven/samba:2025.05
+    image: skaven/samba:20250616
     pull_policy: if_not_present
     volumes:
-    - /raid:/raid6
     - /raid:/raid
     - /raid/user:/home
     stdin_open: true
